@@ -5,6 +5,8 @@ categories: [Walkthrough]
 tags: [ctf, thm, easy]     # TAG names should always be lowercase
 ---
 
+**NOT FINISHED**
+
 The room is available [here](https://tryhackme.com/room/opacity).
 
 ## Information Gathering
@@ -39,6 +41,8 @@ We see that the target machine has the following services running:
 
 Visiting the website at `http://10.10.86.31` we are redirected on `http://10.10.86.31/login.php` which is a login page.
 
+![Login Page](assets/img/posts/walkthroughs/opacity/20240728_opacity_login_page.png)
+
 #### Directory Enumeration
 
 We use `gobuster` to find hidden directories on the website.
@@ -64,9 +68,21 @@ Starting gobuster in directory enumeration mode
 ...
 ```
 
-We find a directory `/cloud`.
+We find a directory `/cloud` containing a index page.
+
+![Cloud Directory](assets/img/posts/walkthroughs/opacity/20240728_opacity_cloud.png)
 
 ## Exploitation
+
+### File Upload
+
+**TODO**
+
+![phpinfo Injection](assets/img/posts/walkthroughs/opacity/20240728_opacity_phpinfo.png)
+
+### Reverse Shell
+
+**TODO**
 
 ```php
 <?php session_start(); /* Starts the session */
@@ -76,22 +92,29 @@ We find a directory `/cloud`.
                 /* Define username and associated password array */
                 $logins = array('admin' => 'oncloud9','root' => 'oncloud9','administrator' => 'oncloud9');
 
-                /* Check and assign submitted Username and Password to new variable */
-                $Username = isset($_POST['Username']) ? $_POST['Username'] : '';
-                $Password = isset($_POST['Password']) ? $_POST['Password'] : '';
-
-                /* Check Username and Password existence in defined array */
-                if (isset($logins[$Username]) && $logins[$Username] == $Password){
-                        /* Success: Set session variables and redirect to Protected page  */
-                        $_SESSION['UserData']['Username']=$logins[$Username];
-                        header("location:index.php");
-                        exit;
-                } else {
-                        /*Unsuccessful attempt: Set error message */
-                        $msg="<span style='color:red'>Invalid Login Details</span>";
-                }
+                ...
         }
 ?>
 ```
 
-INCOMING CONTENT
+### Keepass Crack
+
+![Keepass Database](assets/img/posts/walkthroughs/opacity/20240728_opacity_keepass_crack.png)
+
+`dataset:741852963`
+
+`sysadmin:Cl0udP4ss40p4city#8700`
+
+![Local flag](assets/img/posts/walkthroughs/opacity/20240728_opacity_local_flag.png)
+
+`6661b61b44d234d230d06bf5b3c075e2`
+
+## Post-Exploitation
+
+### Privilege Escalation
+
+**TODO**
+
+![Root flag](assets/img/posts/walkthroughs/opacity/20240728_opacity_root_flag.png)
+
+`ac0d56f93202dd57dcb2498c739fd20e`
