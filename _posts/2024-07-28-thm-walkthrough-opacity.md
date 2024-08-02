@@ -5,6 +5,10 @@ categories: [Walkthrough]
 tags: [ctf, thm, easy]     # TAG names should always be lowercase
 ---
 
+<img src="https://tryhackme-images.s3.amazonaws.com/room-icons/328c078f7c5695439a46ba90ae48aaa0.png" width="200" height="200" />
+
+Welcome to my writeups for the TryHackMe room Opacity. That's an easy room that will help you 
+practice your web exploitation and linux exploitations skills.
 The room is available [here](https://tryhackme.com/room/opacity).
 
 ## Information Gathering
@@ -33,7 +37,7 @@ Nmap done: 1 IP address (1 host up) scanned in 39.07 seconds
 We see that the target machine has the following services running:
 - `SSH` on port 22
 - `HTTP` on port 80
-- `Samba` on ports 139 and 445
+- `SMB` on ports 139 and 445
 
 ### Website Enumeration
 
@@ -122,7 +126,12 @@ Following the same process as before, we upload the file with the `.png` extensi
 
 And now we have a reverse shell on the target machine.
 
+![Whoami](assets/img/posts/walkthroughs/opacity/20240728_opacity_whoami.png)
+
 ### Local Enumeration **TODO**
+
+
+In the web server directory (`/var/www/html/`), we find a file `login.php` containing the following code.
 
 ```php
 <?php session_start(); /* Starts the session */
@@ -137,21 +146,35 @@ And now we have a reverse shell on the target machine.
 ?>
 ```
 
+We can see that the login form is checking for the username `admin`, `root` or `administrator` with the password `oncloud9`.
+
+We can also find a `dataset.kdbx` file in the `/opt` directory.
+
+`.kdbx` files are Keepass password manager databases. We can try to crack the password of the database to get more credentials.
+
 ### Keepass Crack
 
-**TODO**
+We download the `dataset.kdbx` file to our machine and use `keepass2john` to extract the hash.
+
+With the hash, we can use `john` to crack the password of the database.
 
 ![Keepass Database](assets/img/posts/walkthroughs/opacity/20240728_opacity_keepass_crack.png)
 
-`dataset:741852963`
+The crack is successful with the default password list and we get the password `741852963`.
 
-`sysadmin:Cl0udP4ss40p4city#8700`
+With the password, we can open the database with `keepassxc` and find the credentials for the user `sysadmin`.
+
+![Keepassxc](assets/img/posts/walkthroughs/opacity/20240728_opacity_keepassxc.png)
+
+We can now log in as `sysadmin` with the password `Cl0udP4ss40p4city#8700` and get the user flag located in the home directory.
+
+![Whoami sysadmin](assets/img/posts/walkthroughs/opacity/20240728_opacity_whoami_sysadmin.png)
 
 ![Local flag](assets/img/posts/walkthroughs/opacity/20240728_opacity_local_flag.png)
 
 `6661b61b44d234d230d06bf5b3c075e2`
 
-## Post-Exploitation
+## Post Exploitation
 
 ### Privilege Escalation
 
