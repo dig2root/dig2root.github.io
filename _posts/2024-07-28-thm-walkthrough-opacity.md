@@ -5,7 +5,7 @@ categories: [Walkthrough]
 tags: [ctf, thm, easy]     # TAG names should always be lowercase
 ---
 
-<img src="https://tryhackme-images.s3.amazonaws.com/room-icons/328c078f7c5695439a46ba90ae48aaa0.png" width="200" height="200" />
+<img src="https://tryhackme-images.s3.amazonaws.com/room-icons/328c078f7c5695439a46ba90ae48aaa0.png" alt="Opacity Room Icon" width="200" height="200" />
 
 Welcome to my writeups for the TryHackMe room Opacity. That's an easy room that will help you 
 practice your web exploitation and linux exploitations skills.

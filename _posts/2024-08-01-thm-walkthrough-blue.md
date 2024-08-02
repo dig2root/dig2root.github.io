@@ -5,7 +5,7 @@ categories: [Walkthrough]
 tags: [ctf, thm, easy, ms17-010]     # TAG names should always be lowercase
 ---
 
-<img src="https://tryhackme-images.s3.amazonaws.com/room-icons/7717bbc69c486931e503a74f3192a4d8.gif" width="200" height="200" />
+<img src="https://tryhackme-images.s3.amazonaws.com/room-icons/7717bbc69c486931e503a74f3192a4d8.gif" alt="Blue Room Icon" width="200" height="200" />
 
 Welcome to my writeups for the TryHackMe room Blue. That's an easy room that will help you 
 practice your Windows exploitation skills using the MS17-010 vulnerability.
