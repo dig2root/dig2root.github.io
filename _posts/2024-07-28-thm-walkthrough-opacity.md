@@ -128,8 +128,7 @@ And now we have a reverse shell on the target machine.
 
 ![Whoami](assets/img/posts/walkthroughs/opacity/20240728_opacity_whoami.png)
 
-### Local Enumeration **TODO**
-
+### Local Enumeration
 
 In the web server directory (`/var/www/html/`), we find a file `login.php` containing the following code.
 
